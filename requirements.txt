@@ -1,0 +1,6 @@
+Flask==1.1.2
+tensorflow==2.7.0
+keras==2.7.0
+google-cloud-firestore==2.3.0
+python-dotenv==0.19.1
+numpy==1.21.3

@@ -4,6 +4,7 @@ from tensorflow.keras.preprocessing import image
 from keras.layers import DepthwiseConv2D
 from google.cloud import firestore
 import numpy as np
+import cv2
 import os
 from dotenv import load_dotenv
 
@@ -15,7 +16,6 @@ load_dotenv()
 # Menginisialisasi Firestore client
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.path.join(os.getcwd(), "keys", "keyModel.json")
 db = firestore.Client()
-
 
 # Dictionary untuk label kelas dan informasi terkait
 LABELS = {
@@ -45,6 +45,15 @@ try:
 except Exception as e:
     print("Failed to load model:", e)
 
+# Load Haar Cascade for eye detection
+eye_cascade = cv2.CascadeClassifier(cv2.data.haarcascades + 'haarcascade_eye.xml')
+
+def detect_eyes(img_path):
+    img = cv2.imread(img_path)
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    eyes = eye_cascade.detectMultiScale(gray, 1.3, 5)
+    return len(eyes) > 0  # Return True if eyes are detected, otherwise False
+
 # Fungsi untuk memprediksi label
 def predict_label(image_path):
     img = image.load_img(image_path, target_size=(224, 224))
@@ -69,6 +78,9 @@ def predict():
     user_id = request.form['user_id']  # Mengambil ID pengguna dari permintaan HTTP
     img_path = "static/" + img.filename
     img.save(img_path)
+    
+    if not detect_eyes(img_path):
+        return jsonify({'error': 'Gambar tidak valid. Harap unggah gambar dengan jelas.'}), 400
     
     label_index, label_info, confidence = predict_label(img_path)
     accuracy = f"{confidence * 100:.2f}%"
@@ -114,8 +126,8 @@ def get_history():
         return jsonify(history)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-    
-    # Fungsi untuk mengambil koleksi users
+
+# Fungsi untuk mengambil koleksi users
 def get_users_collection():
     users_ref = db.collection('users')
     users = users_ref.get()
@@ -125,7 +137,7 @@ def get_users_collection():
 users_collection = get_users_collection()
 for user in users_collection:
     user_data = user.to_dict()
-    user_id = user_data['id']
+    user_id = user_data.get('id', 'N/A')
     print(f'User ID: {user_id}')
     
 @app.route("/history/<user_id>", methods=['GET'])

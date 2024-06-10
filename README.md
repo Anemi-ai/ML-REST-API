@@ -65,7 +65,9 @@
         "perawatan_medis": "Perawatan medis yang mungkin diperlukan",
         "gayahidup_sehat": "Gaya hidup sehat yang dianjurkan"
       }
-    }
+    } ...
+
+    // Dan seterusnya
 
 ### 3. History by User ID Endpoint
 

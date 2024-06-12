@@ -7,6 +7,7 @@ from google.cloud import firestore
 import numpy as np
 import cv2
 from dotenv import load_dotenv
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -68,15 +69,15 @@ def save_to_firestore(prediction):
     doc_ref = db.collection('predictions').document()
     doc_ref.set(prediction)
 
-# Endpoint untuk prediksi
+#Endpoint predict
 @app.route("/predict", methods=['POST'])
 def predict():
     if 'my_image' not in request.files or 'user_id' not in request.form:
-        return jsonify({'error': 'Data tidak lengkap'}), 400
+        return jsonify({'error': 'Harap isi data yang sesuai, image dan ID tidak boleh kosong!'}), 400
     
     img = request.files['my_image']
-    user_id = request.form['user_id']  # Mengambil ID pengguna dari permintaan HTTP
-    img_path = "static/" + img.filename
+    user_id = request.form['user_id']
+    img_path = os.path.join("static", img.filename)
     img.save(img_path)
     
     if not detect_eyes(img_path):
@@ -84,8 +85,7 @@ def predict():
     
     label_index, label_info, confidence = predict_label(img_path)
     accuracy = f"{confidence * 100:.2f}%"
-    
-    # Informasi tambahan berdasarkan kelas yang diprediksi
+
     additional_info = {
         'tindakan_saran': "Tidak ada tindakan khusus yang disarankan. Pertahankan gaya hidup sehat.",
         'pencegahan': "Anda dapat mencegah masalah kesehatan dengan menjaga pola makan seimbang, berolahraga secara teratur, dan tidur yang cukup.",
@@ -99,17 +99,18 @@ def predict():
         'perawatan_medis': "Perawatan medis untuk anemia tergantung pada jenis dan tingkat keparahan kondisi. Ini bisa mencakup suplemen zat besi atau transfusi darah.",
         'gayahidup_sehat': "Anda dapat membantu mengelola anemia dengan gaya hidup sehat, termasuk makan makanan bergizi, berolahraga secara teratur, dan mengelola stres."
     }
-    
+
+    current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     prediction = {
         'id': user_id,
         'hasil': label_info['name'],
         'deskripsi': label_info['description'],
         'gejala': label_info['symptoms'],
         'akurasi': accuracy,
+        'waktu_prediksi': current_time,
         'informasi_tambahan': additional_info
     }
     
-    # Menyimpan hasil prediksi ke Firestore
     save_to_firestore(prediction)
     
     return jsonify(prediction)
@@ -123,6 +124,8 @@ def get_history():
         history = []
         for doc in docs:
             history.append(doc.to_dict())
+        if not history: 
+            return jsonify({'error':"Data yang dicari tidak ditemukan!"}), 404
         return jsonify(history)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
@@ -149,6 +152,9 @@ def get_history_by_user_id(user_id):
         history = []
         for doc in docs:
             history.append(doc.to_dict())
+        if not history:
+            return jsonify({'error':"User dengan ID yang dicari tidak ditemukan!"}), 404
+
         return jsonify(history)
     except Exception as e:
         return jsonify({'error': str(e)}), 500

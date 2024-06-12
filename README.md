@@ -26,6 +26,7 @@
         "perawatan_medis": "Perawatan medis yang mungkin diperlukan",
         "gayahidup_sehat": "Gaya hidup sehat yang dianjurkan"
       }
+    "waktu_prediksi": "2024-06-13 00:13:35"
     }
     ```
   - **Status Code:** 400 Bad Request
@@ -65,6 +66,7 @@
         "perawatan_medis": "Perawatan medis yang mungkin diperlukan",
         "gayahidup_sehat": "Gaya hidup sehat yang dianjurkan"
       }
+    "waktu_prediksi": "2024-06-13 00:13:35"
     } ...
 
     // Dan seterusnya
@@ -91,4 +93,5 @@
         "perawatan_medis": "Perawatan medis yang mungkin diperlukan",
         "gayahidup_sehat": "Gaya hidup sehat yang dianjurkan"
       }
+    "waktu_prediksi": "2024-06-13 00:13:35"
     }

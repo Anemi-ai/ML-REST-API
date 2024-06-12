@@ -26,7 +26,11 @@
         "perawatan_medis": "Perawatan medis yang mungkin diperlukan",
         "gayahidup_sehat": "Gaya hidup sehat yang dianjurkan"
       }
+<<<<<<< HEAD
       "waktu_prediksi": "2024-06-13 00:13:35"
+=======
+    "waktu_prediksi": "2024-06-13 00:13:35"
+>>>>>>> 9f5b62919df4caad29aee6c60da3c4c841b58bd5
     }
     ```
   - **Status Code:** 400 Bad Request
@@ -67,8 +71,7 @@
         "gayahidup_sehat": "Gaya hidup sehat yang dianjurkan"
       }
       "waktu_prediksi": "2024-06-13 00:13:35"
-    } ...
-
+    }
     // Dan seterusnya
 
   - **Status Code:** 404 Not Found

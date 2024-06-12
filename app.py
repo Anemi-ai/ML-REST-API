@@ -1,3 +1,4 @@
+import os
 from flask import Flask, request, jsonify
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
@@ -5,7 +6,6 @@ from keras.layers import DepthwiseConv2D
 from google.cloud import firestore
 import numpy as np
 import cv2
-import os
 from dotenv import load_dotenv
 
 app = Flask(__name__)
@@ -154,4 +154,5 @@ def get_history_by_user_id(user_id):
         return jsonify({'error': str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 8080))
+    app.run(host='0.0.0.0', port=port)

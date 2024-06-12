@@ -26,13 +26,14 @@
         "perawatan_medis": "Perawatan medis yang mungkin diperlukan",
         "gayahidup_sehat": "Gaya hidup sehat yang dianjurkan"
       }
+      "waktu_prediksi": "2024-06-13 00:13:35"
     }
     ```
   - **Status Code:** 400 Bad Request
   - **Data:**
     ```json
     {
-      "error": "Data tidak lengkap"
+      "error": "Harap isi data yang sesuai, image dan ID tidak boleh kosong!"
     }
     ```
   - **Status Code:** 400 Bad Request
@@ -65,9 +66,18 @@
         "perawatan_medis": "Perawatan medis yang mungkin diperlukan",
         "gayahidup_sehat": "Gaya hidup sehat yang dianjurkan"
       }
+      "waktu_prediksi": "2024-06-13 00:13:35"
     } ...
 
     // Dan seterusnya
+
+  - **Status Code:** 404 Not Found
+  - **Data:**
+    ```json
+    {
+      "error": "Data kosong tidak ditemukan"
+    }
+    ```
 
 ### 3. History by User ID Endpoint
 
@@ -91,4 +101,13 @@
         "perawatan_medis": "Perawatan medis yang mungkin diperlukan",
         "gayahidup_sehat": "Gaya hidup sehat yang dianjurkan"
       }
+      "waktu_prediksi": "2024-06-13 00:13:35"
     }
+
+  - **Status Code:** 404 Not Found
+  - **Data:**
+    ```json
+    {
+      "error": "User dengan ID yang dicari tidak ditemukan!"
+    }
+    ```

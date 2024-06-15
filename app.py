@@ -3,7 +3,7 @@ from flask import Flask, request, jsonify
 from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
 from keras.layers import DepthwiseConv2D
-from google.cloud import firestore
+from google.cloud import firestore, storage
 import numpy as np
 import cv2
 from dotenv import load_dotenv
@@ -14,10 +14,17 @@ app = Flask(__name__)
 # Memuat variabel lingkungan dari file .env
 load_dotenv()
 
-# # Menginisialisasi Firestore client
-# os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.path.join(os.getcwd(), "keyModel.json")
-
+# Inisialisasi Firestore client
+os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.path.join(os.getcwd(), os.getenv('GOOGLE_APPLICATION_CREDENTIALS'))
 db = firestore.Client()
+
+# Inisialisasi Google Cloud Storage client
+storage_client = storage.Client()
+bucket_name = os.getenv('GCS_BUCKET_NAME')
+if not bucket_name:
+    raise ValueError("Tidak ditemukan bucket name.")
+bucket = storage_client.bucket(bucket_name)
+
 # Dictionary untuk label kelas dan informasi terkait
 LABELS = {
     0: {
@@ -54,6 +61,13 @@ def detect_eyes(img_path):
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     eyes = eye_cascade.detectMultiScale(gray, 1.3, 5)
     return len(eyes) > 0  # Return True if eyes are detected, otherwise False
+
+#Upload gambara ke bucket
+def upload_image_to_gcs(image_path, user_id):
+    blob = bucket.blob(f"{user_id}/{os.path.basename(image_path)}")
+    blob.upload_from_filename(image_path)
+    blob.make_public()  # Membuat gambar dapat diakses publik
+    return blob.public_url
 
 # Fungsi untuk memprediksi label
 def predict_label(image_path):
@@ -101,6 +115,8 @@ def predict():
     }
 
     current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    image_url = upload_image_to_gcs(img_path, user_id)
+    
     prediction = {
         'id': user_id,
         'hasil': label_info['name'],
@@ -108,7 +124,8 @@ def predict():
         'gejala': label_info['symptoms'],
         'akurasi': accuracy,
         'waktu_prediksi': current_time,
-        'informasi_tambahan': additional_info
+        'informasi_tambahan': additional_info,
+        'image_url': image_url  # Tambahkan URL gambar ke prediksi
     }
     
     save_to_firestore(prediction)

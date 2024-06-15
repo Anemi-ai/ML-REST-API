@@ -21,6 +21,7 @@
       "akurasi": "Akurasi prediksi",
       "informasi_tambahan": {
         "tindakan_saran": "Saran atau tindakan yang dianjurkan",
+        "image_url": "https://storage.googleapis.com/anemia-bucket-data/eb8901ea-16f8-4376-8c27-e341c28a5f55/Nor%204.jpg",
         "pencegahan": "Langkah-langkah pencegahan yang disarankan",
         "risiko_komplikasi": "Risiko komplikasi terkait dengan kondisi",
         "perawatan_medis": "Perawatan medis yang mungkin diperlukan",
@@ -61,6 +62,7 @@
       "akurasi": "Akurasi prediksi",
       "informasi_tambahan": {
         "tindakan_saran": "Saran atau tindakan yang dianjurkan",
+        "image_url": "https://storage.googleapis.com/anemia-bucket-data/eb8901ea-16f8-4376-8c27-e341c28a5f55/Nor%204.jpg",
         "pencegahan": "Langkah-langkah pencegahan yang disarankan",
         "risiko_komplikasi": "Risiko komplikasi terkait dengan kondisi",
         "perawatan_medis": "Perawatan medis yang mungkin diperlukan",
@@ -95,6 +97,7 @@
       "akurasi": "Akurasi prediksi",
       "informasi_tambahan": {
         "tindakan_saran": "Saran atau tindakan yang dianjurkan",
+        "image_url": "https://storage.googleapis.com/anemia-bucket-data/eb8901ea-16f8-4376-8c27-e341c28a5f55/Nor%204.jpg",
         "pencegahan": "Langkah-langkah pencegahan yang disarankan",
         "risiko_komplikasi": "Risiko komplikasi terkait dengan kondisi",
         "perawatan_medis": "Perawatan medis yang mungkin diperlukan",

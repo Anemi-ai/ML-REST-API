@@ -1,23 +1,25 @@
-# Gunakan image dasar python
-FROM python:3.8-slim
+# Using base image Python version 3.12 slim
+FROM python:3.12-slim
 
-# Set lingkungan kerja di dalam container
+# Set working directory inside the container
 WORKDIR /app
 
-# Salin requirements.txt ke dalam container
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    libgl1-mesa-glx \
+    libglib2.0-0
+
+# Copy requirements.txt to install Python dependencies
 COPY requirements.txt .
 
-# Install dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# Install dependencies from requirements.txt
+RUN pip install --upgrade pip --no-cache-dir -r requirements.txt
 
-# Salin semua file ke dalam container
+# Copy entire current directory contents into the container at /app
 COPY . .
 
-# Atur variabel lingkungan untuk menyimpan path file kunci Google Cloud
-ENV GOOGLE_APPLICATION_CREDENTIALS=keys/keyModel.json
-
-# Expose port 8080
+# Expose port 8080 for the Flask app
 EXPOSE 8080
 
-# Tentukan perintah untuk menjalankan aplikasi
-CMD ["python", "app.py"]
+# Command to run Gunicorn
+CMD ["gunicorn", "-b", "0.0.0.0:8080", "app:app"]

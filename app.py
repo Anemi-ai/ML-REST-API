@@ -14,10 +14,10 @@ app = Flask(__name__)
 # Memuat variabel lingkungan dari file .env
 load_dotenv()
 
-# Menginisialisasi Firestore client
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.path.join(os.getcwd(), "keys", "keyModel.json")
-db = firestore.Client()
+# # Menginisialisasi Firestore client
+# os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = os.path.join(os.getcwd(), "keyModel.json")
 
+db = firestore.Client()
 # Dictionary untuk label kelas dan informasi terkait
 LABELS = {
     0: {
@@ -158,7 +158,6 @@ def get_history_by_user_id(user_id):
         return jsonify(history)
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-
-if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 8080))
-    app.run(host='0.0.0.0', port=port)
+    
+if __name__ == "__main__":
+    app.run(debug=True, host="0.0.0.0", port=int(os.environ.get("PORT", 8080)))

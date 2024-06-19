@@ -4,10 +4,13 @@ from tensorflow.keras.models import load_model
 from tensorflow.keras.preprocessing import image
 from keras.layers import DepthwiseConv2D
 from google.cloud import firestore, storage
-import numpy as np
-import cv2
 from dotenv import load_dotenv
 from datetime import datetime
+import numpy as np
+import cv2
+import pytz
+
+
 
 app = Flask(__name__)
 
@@ -114,7 +117,10 @@ def predict():
         'gayahidup_sehat': "Anda dapat membantu mengelola anemia dengan gaya hidup sehat, termasuk makan makanan bergizi, berolahraga secara teratur, dan mengelola stres."
     }
 
-    current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    # Mengatur waktu_prediksi dengan format yang lebih lengkap
+    timezone = pytz.timezone('Asia/Jakarta')
+    current_time = datetime.now(timezone).strftime('%A, %B %d %Y, %H:%M:%S %Z%z')
+
     image_url = upload_image_to_gcs(img_path, user_id)
     
     prediction = {
@@ -127,6 +133,7 @@ def predict():
         'informasi_tambahan': additional_info,
         'image_url': image_url  # Tambahkan URL gambar ke prediksi
     }
+    print(current_time) 
     
     save_to_firestore(prediction)
     
